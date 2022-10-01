@@ -66,32 +66,43 @@ void loop() {
       lcd.print("+1 deg.");
       lcd.setBacklight(RED);
       etbPosition++;
-      etb_servo.write(etbPosition);
+      
     }
     if (buttons & BUTTON_DOWN) {
       lcd.print("-1 deg.");
       lcd.setBacklight(RED);
       etbPosition--;
-      etb_servo.write(etbPosition);
+      
     }
     if (buttons & BUTTON_LEFT) {
       lcd.print("Wide Open ");
       lcd.setBacklight(GREEN);
       etbPosition=90;
-      etb_servo.write(etbPosition);
+      
     }
     if (buttons & BUTTON_RIGHT) {
       lcd.print("Closed or Idle ");
       lcd.setBacklight(TEAL);
       etbPosition=0;
-      etb_servo.write(etbPosition);
-
     }
     if (buttons & BUTTON_SELECT) {
       lcd.print("SELECT ");
       lcd.setBacklight(VIOLET);
     }
+
+    if(etbPosition>90){
+      etbPosition=90;
+    }
+    if(etbPosition<0){
+      etbPosition=0;
+    }
+
+    etb_servo.write(etbPosition);
+
   }
+
+
+
 }
 void etb_state_machine(uint8_t etb_state){
   switch (etb_state)  {
