@@ -22,7 +22,7 @@ When a button is pressed, the backlight changes color.
 // the I2C bus.
 Adafruit_RGBLCDShield lcd = Adafruit_RGBLCDShield();
 Servo etb_servo;
-int valueDegrees = 0; //variable that contains the degrees
+int etbPosition = 0; //variable that contains the degrees
 //
 // These #defines make it easy to set the backlight color
 #define RED 0x1
@@ -55,7 +55,7 @@ void loop() {
   // (note: line 1 is the second row, since counting begins with 0):
   lcd.setCursor(0, 1);
   // print the number of seconds since reset:
-  lcd.print(millis()/1000);
+  lcd.print(etbPosition);
 
   uint8_t buttons = lcd.readButtons();
 
@@ -63,23 +63,29 @@ void loop() {
     lcd.clear();
     lcd.setCursor(0,0);
     if (buttons & BUTTON_UP) {
-      lcd.print("UP ");
+      lcd.print("+1 deg.");
       lcd.setBacklight(RED);
-      etb_servo.write(180);
+      etbPosition++;
+      etb_servo.write(etbPosition);
     }
     if (buttons & BUTTON_DOWN) {
-      lcd.print("DOWN ");
-      lcd.setBacklight(YELLOW);
-      etb_servo.write(0);
+      lcd.print("-1 deg.");
+      lcd.setBacklight(RED);
+      etbPosition--;
+      etb_servo.write(etbPosition);
     }
     if (buttons & BUTTON_LEFT) {
-      lcd.print("LEFT ");
+      lcd.print("Wide Open ");
       lcd.setBacklight(GREEN);
-      etb_servo.write(90);
+      etbPosition=90;
+      etb_servo.write(etbPosition);
     }
     if (buttons & BUTTON_RIGHT) {
-      lcd.print("RIGHT ");
+      lcd.print("Closed or Idle ");
       lcd.setBacklight(TEAL);
+      etbPosition=0;
+      etb_servo.write(etbPosition);
+
     }
     if (buttons & BUTTON_SELECT) {
       lcd.print("SELECT ");
