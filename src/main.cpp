@@ -1,10 +1,8 @@
 /*********************
-
 Example code for the Adafruit RGB Character LCD Shield and Library
 
 This code displays text on the shield, and also reads the buttons on the keypad.
 When a button is pressed, the backlight changes color.
-
 **********************/
 
 // include the library code:
@@ -13,8 +11,6 @@ When a button is pressed, the backlight changes color.
 #include <Adafruit_RGBLCDShield.h>
 #include <utility/Adafruit_MCP23017.h>
 #include <Servo.h>
-
-
 
 // The shield uses the I2C SCL and SDA pins. On classic Arduinos
 // this is Analog 4 and 5 so you can't use those for analogRead() anymore
@@ -32,6 +28,7 @@ int etbPosition = 0; //variable that contains the degrees
 #define BLUE 0x4
 #define VIOLET 0x5
 #define WHITE 0x7
+
 //State var define
 uint8_t state=0;
 void etb_state_machine(uint8_t etb_state);
@@ -44,9 +41,7 @@ void setup() {
   // Print a message to the LCD. We track how long it takes since
   // this library has been optimized a bit and we're proud of it :)
   int time = millis();
-  lcd.print("Hello, world!");
-  time = millis() - time;
-  Serial.print("Took "); Serial.print(time); Serial.println(" ms");
+  lcd.print("ETB Powered UP!");
   lcd.setBacklight(WHITE);
 }
 
@@ -54,21 +49,22 @@ void loop() {
   // set the cursor to column 0, line 1
   // (note: line 1 is the second row, since counting begins with 0):
   lcd.setCursor(0, 1);
-  // print the number of seconds since reset:
+  // print the current position of ETBt:
   lcd.print(etbPosition);
 
   //Check for button presses
   uint8_t buttons = lcd.readButtons();
 
-  //Reading serial?
+  //Serial input from keyboard for custom TB angles
   if(Serial.available()){
     String message=(Serial.readString());
-    Serial.println(message);
     int userreq=message.toInt();
     Serial.println(userreq);
+    //Validation for inputs being int between 0-90 degrees
     if(userreq<=90 && userreq>=0){
       etb_servo.write(userreq);
     }
+    //Print out custom angle to LCD
     lcd.clear();
     lcd.setCursor(0,0);
     lcd.print("Custom angle ");
@@ -117,6 +113,7 @@ void loop() {
       etbPosition=0;
     }
     
+    //Final write of position to servo
     etb_servo.write(etbPosition);
   }
 
