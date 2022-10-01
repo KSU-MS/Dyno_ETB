@@ -57,48 +57,67 @@ void loop() {
   // print the number of seconds since reset:
   lcd.print(etbPosition);
 
+  //Check for button presses
   uint8_t buttons = lcd.readButtons();
 
+  //Reading serial?
+  if(Serial.available()){
+    String message=(Serial.readString());
+    Serial.println(message);
+    int userreq=message.toInt();
+    Serial.println(userreq);
+    if(userreq<=90 && userreq>=0){
+      etb_servo.write(userreq);
+    }
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Custom angle ");
+    lcd.setCursor(0,1);
+    lcd.print(userreq);
+  }
+
+  //Actions to take depending on what button was pressed
   if (buttons) {
     lcd.clear();
     lcd.setCursor(0,0);
     if (buttons & BUTTON_UP) {
       lcd.print("+1 deg.");
-      lcd.setBacklight(RED);
+      lcd.setBacklight(YELLOW);
       etbPosition++;
-      
     }
+
     if (buttons & BUTTON_DOWN) {
       lcd.print("-1 deg.");
       lcd.setBacklight(RED);
       etbPosition--;
-      
     }
+
     if (buttons & BUTTON_LEFT) {
-      lcd.print("Wide Open ");
-      lcd.setBacklight(GREEN);
-      etbPosition=90;
-      
-    }
-    if (buttons & BUTTON_RIGHT) {
       lcd.print("Closed or Idle ");
       lcd.setBacklight(TEAL);
-      etbPosition=0;
+      etbPosition=0; 
     }
+
+    if (buttons & BUTTON_RIGHT) {
+      lcd.print("Wide Open! ");
+      lcd.setBacklight(GREEN);
+      etbPosition=90;
+    }
+    
     if (buttons & BUTTON_SELECT) {
       lcd.print("SELECT ");
       lcd.setBacklight(VIOLET);
     }
-
+    
+    //Checks for invalid ranges on TPS to prevent +/- beyond bounds
     if(etbPosition>90){
       etbPosition=90;
     }
     if(etbPosition<0){
       etbPosition=0;
     }
-
+    
     etb_servo.write(etbPosition);
-
   }
 
 
