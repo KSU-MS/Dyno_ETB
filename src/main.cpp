@@ -1,8 +1,8 @@
 /*********************
-Example code for the Adafruit RGB Character LCD Shield and Library
+Kennesaw State ETB Servo code
+Uses this servo:
+https://www.hobbytown.com/ecopower-wp110t-cored-waterproof-high-torque-metal-gear-digital-servo-ecp-110t/p734713
 
-This code displays text on the shield, and also reads the buttons on the keypad.
-When a button is pressed, the backlight changes color.
 **********************/
 
 // include the library code:
@@ -18,7 +18,10 @@ When a button is pressed, the backlight changes color.
 // the I2C bus.
 Adafruit_RGBLCDShield lcd = Adafruit_RGBLCDShield();
 Servo etb_servo;
+int etbClosed=0;
+int etbOpen=90;
 int etbPosition = 0; //variable that contains the degrees
+
 //
 // These #defines make it easy to set the backlight color
 #define RED 0x1
@@ -61,7 +64,7 @@ void loop() {
     int userreq=message.toInt();
     Serial.println(userreq);
     //Validation for inputs being int between 0-90 degrees
-    if(userreq<=90 && userreq>=0){
+    if(userreq<=etbOpen && userreq>=etbClosed){
       etb_servo.write(userreq);
     }
     //Print out custom angle to LCD
@@ -91,30 +94,34 @@ void loop() {
     if (buttons & BUTTON_LEFT) {
       lcd.print("Closed or Idle ");
       lcd.setBacklight(TEAL);
-      etbPosition=0; 
+      etbPosition=etbClosed; 
     }
 
     if (buttons & BUTTON_RIGHT) {
       lcd.print("Wide Open! ");
       lcd.setBacklight(GREEN);
-      etbPosition=90;
+      etbPosition=etbOpen;
     }
     
     if (buttons & BUTTON_SELECT) {
-      lcd.print("SELECT ");
+      lcd.print("Zero");
       lcd.setBacklight(VIOLET);
+      etbPosition=0;
     }
     
     //Checks for invalid ranges on TPS to prevent +/- beyond bounds
-    if(etbPosition>90){
-      etbPosition=90;
+    if(etbPosition>etbOpen){
+      etbPosition=etbOpen;
     }
-    if(etbPosition<0){
-      etbPosition=0;
+    if(etbPosition<etbClosed){
+      etbPosition=etbClosed;
     }
     
     //Final write of position to servo
     etb_servo.write(etbPosition);
+    delay(100);
+    lcd.setCursor(5,1);
+    lcd.print(etb_servo.read());    
   }
 
 
