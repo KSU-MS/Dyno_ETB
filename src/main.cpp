@@ -1,3 +1,74 @@
+// /*********************
+// Kennesaw State ETB Servo code
+// Uses this servo:
+// https://www.hobbytown.com/ecopower-wp110t-cored-waterproof-high-torque-metal-gear-digital-servo-ecp-110t/p734713
+
+// **********************/
+
+// // include the library code:
+// #include <Arduino.h>
+// #include <Wire.h>
+// #include <Adafruit_RGBLCDShield.h>
+// #include <utility/Adafruit_MCP23017.h>
+// #include <Servo.h>
+
+// // The shield uses the I2C SCL and SDA pins. On classic Arduinos
+// // this is Analog 4 and 5 so you can't use those for analogRead() anymore
+// // However, you can connect other I2C sensors to the I2C bus and share
+// // the I2C bus.
+// Adafruit_RGBLCDShield lcd = Adafruit_RGBLCDShield();
+// Servo etb_servo;
+// int etbClosed=0;
+// int etbOpen=90;
+// int etbPosition = 0; //variable that contains the degrees
+
+// int potread=0;
+// int potpin=A0;
+// int maxpot=870;
+// int minpot=680;
+
+// //
+// // These #defines make it easy to set the backlight color
+// #define RED 0x1
+// #define YELLOW 0x3
+// #define GREEN 0x2
+// #define TEAL 0x6
+// #define BLUE 0x4
+// #define VIOLET 0x5
+// #define WHITE 0x7
+
+// void setup() {
+//   // Debugging output
+//   Serial.begin(9600);
+//   // set up the LCD's number of columns and rows: 
+//   etb_servo.attach(3);
+//   // Print a message to the LCD. We track how long it takes since
+//   // this library has been optimized a bit and we're proud of it :)
+//   int time = millis();
+
+// }
+
+// void loop() {
+//   delay(100);
+//   int rawpotread=analogRead(potpin);
+//   int potread=rawpotread;
+//   if(rawpotread>maxpot){
+//     potread=maxpot;
+//   }
+//   if(rawpotread<minpot){
+//     potread=minpot;
+//   }
+//   int newpotread=map(potread,minpot,maxpot,0,90);
+//   Serial.println(rawpotread); 
+//   Serial.println(potread);
+//   Serial.println(newpotread);
+//   Serial.println("");
+//   etbPosition=newpotread;
+//   etb_servo.write(etbPosition);
+// }
+
+
+
 /*********************
 Kennesaw State ETB Servo code
 Uses this servo:
